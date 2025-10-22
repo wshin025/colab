@@ -1,0 +1,30 @@
+from sklearn.datasets import load_wine
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+
+
+wine = load_wine()
+X = wine.data
+
+
+pca = PCA(n_components=2)
+X2 = pca.fit_transform(X)
+
+
+kmeans = KMeans(n_clusters=3, random_state=42)
+kmeans.fit(X2)
+
+
+labels = kmeans.labels_
+centers = kmeans.cluster_centers_
+
+
+plt.figure(figsize=(6, 5))
+plt.scatter(X2[:, 0], X2[:, 1], c=labels, cmap="rainbow", s=50)
+plt.scatter(centers[:, 0], centers[:, 1], c="black", marker="x", s=200, label="Centroids")
+plt.title("K-Means 군집화 결과 (Wine 데이터, K=3)")
+plt.xlabel("PCA1")
+plt.ylabel("PCA2")
+plt.legend()
+plt.show()
