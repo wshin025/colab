@@ -1,0 +1,34 @@
+from sklearn.datasets import load_wine
+from sklearn.decomposition import PCA
+from scipy.cluster.hierarchy import linkage, dendrogram, fcluster
+import matplotlib.pyplot as plt
+
+
+wine = load_wine()
+X = wine.data
+
+
+pca = PCA(n_components=2)
+X2 = pca.fit_transform(X)
+
+
+Z = linkage(X2, method='ward')  # ward: 군집 내 분산 최소화
+
+
+plt.figure(figsize=(10, 5))
+dendrogram(Z, truncate_mode="level", p=5)
+plt.title("Wine 데이터 계층적 군집화 덴드로그램")
+plt.xlabel("데이터 그룹")
+plt.ylabel("병합 거리")
+plt.show()
+
+
+clusters = fcluster(Z, t=3, criterion='maxclust')
+
+
+plt.figure(figsize=(6, 5))
+plt.scatter(X2[:, 0], X2[:, 1], c=clusters, cmap="rainbow", s=50)
+plt.title("계층적 군집화 결과 (K=3, Wine 데이터)")
+plt.xlabel("PCA1")
+plt.ylabel("PCA2")
+plt.show()
